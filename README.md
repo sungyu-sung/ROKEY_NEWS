@@ -1,4 +1,4 @@
-# 📰 뉴스 요약 및 감성 분석 웹 서비스
+# 📰 뉴스 요약 및 감성 분석 웹 서비스 (ROKEY_NEWS)
 
 Streamlit 기반의 뉴스 검색, AI 요약 및 감성 분석 웹 애플리케이션입니다.
 
@@ -44,8 +44,8 @@ Streamlit 기반의 뉴스 검색, AI 요약 및 감성 분석 웹 애플리케�
 ### 1. 저장소 클론
 
 ```bash
-git clone https://github.com/Playdata-G-DA35/rokey_news.git
-cd rokey_news
+git clone https://github.com/sungyu-sung/ROKEY_NEWS.git
+cd ROKEY_NEWS
 ```
 
 ### 2. 가상환경 설정
@@ -103,7 +103,7 @@ streamlit run app.py
 ## 프로젝트 구조
 
 ```
-rokey_news/
+ROKEY_NEWS/
 ├── app.py              # 메인 Streamlit 앱
 ├── requirements.txt    # Python 의존성
 ├── .env.example        # 환경 변수 템플릿
