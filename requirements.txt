@@ -1,0 +1,14 @@
+# 뉴스 요약 및 감성 분석 웹 서비스 의존성
+# Python 3.9 이상 권장
+
+# 웹 프레임워크
+streamlit>=1.28.0
+
+# 뉴스 API
+newsapi-python>=0.2.7
+
+# OpenAI API
+openai>=1.0.0
+
+# 환경 변수 관리 (로컬 개발용)
+python-dotenv>=1.0.0
