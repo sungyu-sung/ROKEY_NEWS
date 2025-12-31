@@ -2,6 +2,10 @@
 
 Streamlit 기반의 뉴스 검색, AI 요약 및 감성 분석 웹 애플리케이션입니다.
 
+## 🚀 Live Demo
+
+**[https://rokeynewsgit-knceenigwbke39s2wu4o2k.streamlit.app](https://rokeynewsgit-knceenigwbke39s2wu4o2k.streamlit.app)**
+
 ## 주요 기능
 
 | 기능 | 설명 |

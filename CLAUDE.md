@@ -4,6 +4,10 @@
 
 **뉴스 요약 및 감성 분석 웹 서비스** - Streamlit 기반 MVP
 
+## 🚀 배포 URL
+
+**Production**: https://rokeynewsgit-knceenigwbke39s2wu4o2k.streamlit.app
+
 ## 기술 스택
 
 - **Frontend/Backend**: Streamlit (Python)
