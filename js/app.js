@@ -1,109 +1,20 @@
 /**
  * ROKEY NEWS - AI 뉴스 요약 애플리케이션
+ * 실제 NewsAPI 연동 버전
  */
 
-// 샘플 뉴스 데이터 (실제로는 API에서 가져옴)
-const sampleNewsData = [
-    {
-        id: 1,
-        category: '기술/IT',
-        categoryCode: 'tech',
-        title: 'OpenAI, GPT-5 개발 박차... 인공지능 새 시대 예고',
-        summary: 'OpenAI가 차세대 인공지능 모델 GPT-5 개발에 속도를 내고 있다. 업계 전문가들은 GPT-5가 현재 모델 대비 획기적인 성능 향상을 보일 것으로 예상하며, 특히 복잡한 추론 능력과 멀티모달 처리 능력이 크게 개선될 것으로 전망했다.',
-        source: '테크크런치',
-        time: '2시간 전',
-        url: '#',
-        keywords: ['AI', 'GPT-5', 'OpenAI']
-    },
-    {
-        id: 2,
-        category: '경제',
-        categoryCode: 'economy',
-        title: '한국은행, 기준금리 동결 결정... 물가 안정 우선',
-        summary: '한국은행 금융통화위원회가 기준금리를 현 수준에서 동결하기로 결정했다. 이창용 한은 총재는 물가 안정을 최우선 과제로 삼고 있으며, 향후 경제 상황을 면밀히 모니터링하겠다고 밝혔다.',
-        source: '한국경제',
-        time: '3시간 전',
-        url: '#',
-        keywords: ['금리', '한국은행', '통화정책']
-    },
-    {
-        id: 3,
-        category: '정치',
-        categoryCode: 'politics',
-        title: '국회, 2026년도 예산안 본회의 통과',
-        summary: '국회 본회의에서 2026년도 예산안이 최종 통과됐다. 총 규모는 약 680조원으로, 복지와 교육 분야 예산이 증가했으며, R&D 투자도 확대됐다. 여야는 막판 협상을 통해 주요 쟁점에 합의했다.',
-        source: '연합뉴스',
-        time: '4시간 전',
-        url: '#',
-        keywords: ['예산', '국회', '2026']
-    },
-    {
-        id: 4,
-        category: '국제',
-        categoryCode: 'world',
-        title: 'EU, 새로운 AI 규제법 시행... 글로벌 기준 제시',
-        summary: '유럽연합이 세계 최초로 포괄적인 AI 규제법을 시행했다. 이 법안은 고위험 AI 시스템에 대한 엄격한 규제를 포함하며, 글로벌 AI 거버넌스의 새로운 기준이 될 것으로 전망된다.',
-        source: 'BBC',
-        time: '5시간 전',
-        url: '#',
-        keywords: ['EU', 'AI규제', '법안']
-    },
-    {
-        id: 5,
-        category: '스포츠',
-        categoryCode: 'sports',
-        title: '손흥민, 시즌 20호골 달성... EPL 득점왕 경쟁',
-        summary: '토트넘의 손흥민이 시즌 20번째 골을 기록하며 득점왕 경쟁에서 선두권을 유지하고 있다. 이번 골은 왼발 중거리슛으로, 손흥민 특유의 기술을 보여줬다는 평가다.',
-        source: 'ESPN',
-        time: '6시간 전',
-        url: '#',
-        keywords: ['손흥민', 'EPL', '득점']
-    },
-    {
-        id: 6,
-        category: '기술/IT',
-        categoryCode: 'tech',
-        title: '삼성전자, 차세대 폴더블폰 공개... 새로운 폼팩터 선보여',
-        summary: '삼성전자가 새로운 폴더블 스마트폰을 공개했다. 이번 제품은 3단 접이식 디자인을 채택해 태블릿 수준의 화면 크기를 구현하면서도 휴대성을 높였다. 업계는 폴더블폰 시장의 새 지평을 열 것으로 기대하고 있다.',
-        source: '조선비즈',
-        time: '7시간 전',
-        url: '#',
-        keywords: ['삼성', '폴더블', '스마트폰']
-    },
-    {
-        id: 7,
-        category: '경제',
-        categoryCode: 'economy',
-        title: '코스피, 사상 최고치 경신... 외국인 매수세 지속',
-        summary: '코스피 지수가 사상 최고치를 경신하며 3,200선을 돌파했다. 외국인 투자자들의 지속적인 매수세와 반도체 업종의 강세가 상승을 이끌었다. 전문가들은 추가 상승 여력이 있다고 분석했다.',
-        source: '매일경제',
-        time: '8시간 전',
-        url: '#',
-        keywords: ['코스피', '주식', '외국인']
-    },
-    {
-        id: 8,
-        category: '국제',
-        categoryCode: 'world',
-        title: '미중 정상회담, 무역 갈등 완화 합의',
-        summary: '미국과 중국 정상이 회담을 갖고 양국 간 무역 갈등 완화에 합의했다. 양측은 관세 인하와 기술 협력 확대 방안을 논의했으며, 향후 실무 협상을 통해 구체적인 이행 방안을 마련하기로 했다.',
-        source: '로이터',
-        time: '9시간 전',
-        url: '#',
-        keywords: ['미중', '무역', '정상회담']
-    },
-    {
-        id: 9,
-        category: '기술/IT',
-        categoryCode: 'tech',
-        title: '네이버, 하이퍼클로바X 업그레이드... 한국어 AI 선도',
-        summary: '네이버가 자체 개발한 초거대 AI 하이퍼클로바X의 대규모 업그레이드를 발표했다. 새 버전은 한국어 이해와 생성 능력이 크게 향상됐으며, 다양한 산업 분야에서의 활용도가 높아질 전망이다.',
-        source: '디지털데일리',
-        time: '10시간 전',
-        url: '#',
-        keywords: ['네이버', 'AI', '하이퍼클로바']
-    }
-];
+// API 설정
+const API_BASE_URL = window.location.origin;
+
+// 카테고리 한글 매핑
+const CATEGORY_NAMES = {
+    all: '전체',
+    tech: '기술/IT',
+    economy: '경제',
+    politics: '정치',
+    world: '국제',
+    sports: '스포츠'
+};
 
 // DOM 요소들
 const elements = {
@@ -120,7 +31,18 @@ const elements = {
     modalOverlay: document.getElementById('modalOverlay'),
     modalClose: document.getElementById('modalClose'),
     viewBtns: document.querySelectorAll('.view-btn'),
-    navLinks: document.querySelectorAll('.nav-link')
+    navLinks: document.querySelectorAll('.nav-link'),
+    // 설정 관련
+    settingsBtn: document.getElementById('settingsBtn'),
+    settingsOverlay: document.getElementById('settingsOverlay'),
+    settingsClose: document.getElementById('settingsClose'),
+    settingsStatus: document.getElementById('settingsStatus'),
+    userApiKey: document.getElementById('userApiKey'),
+    newsLanguage: document.getElementById('newsLanguage'),
+    toggleKeyVisibility: document.getElementById('toggleKeyVisibility'),
+    clearApiKey: document.getElementById('clearApiKey'),
+    saveSettings: document.getElementById('saveSettings'),
+    apiStatus: document.getElementById('apiStatus')
 };
 
 // 상태 관리
@@ -129,50 +51,217 @@ let state = {
     currentView: 'grid',
     newsData: [],
     filteredData: [],
-    searchQuery: ''
+    searchQuery: '',
+    userApiKey: localStorage.getItem('newsApiKey') || '',
+    userOpenAIKey: localStorage.getItem('openaiApiKey') || '',
+    language: localStorage.getItem('newsLanguage') || 'en',
+    isLoading: false,
+    hasDefaultKey: false
 };
 
 // 초기화
-function init() {
+async function init() {
     setCurrentDate();
-    loadNews();
+    loadSettings();
+    await checkApiStatus();
+    await loadNews();
     bindEvents();
+}
+
+// 설정 로드
+function loadSettings() {
+    state.userApiKey = localStorage.getItem('newsApiKey') || '';
+    state.language = localStorage.getItem('newsLanguage') || 'en';
+
+    if (elements.userApiKey) {
+        elements.userApiKey.value = state.userApiKey;
+    }
+    if (elements.newsLanguage) {
+        elements.newsLanguage.value = state.language;
+    }
+}
+
+// API 상태 확인
+async function checkApiStatus() {
+    const apiStatusEl = elements.apiStatus;
+    const settingsStatusEl = elements.settingsStatus;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/status?api_key=${encodeURIComponent(state.userApiKey)}`);
+        const data = await response.json();
+
+        state.hasDefaultKey = data.hasDefaultKey;
+
+        if (apiStatusEl) {
+            const statusDot = apiStatusEl.querySelector('.status-dot');
+            const statusText = apiStatusEl.querySelector('.status-text');
+
+            if (data.valid || data.hasDefaultKey) {
+                apiStatusEl.className = 'api-status connected';
+                statusText.textContent = '연결됨';
+            } else {
+                apiStatusEl.className = 'api-status error';
+                statusText.textContent = 'API 키 필요';
+            }
+        }
+
+        if (settingsStatusEl) {
+            updateSettingsStatus(data);
+        }
+
+        return data;
+    } catch (error) {
+        console.error('API 상태 확인 실패:', error);
+
+        if (apiStatusEl) {
+            apiStatusEl.className = 'api-status error';
+            apiStatusEl.querySelector('.status-text').textContent = '서버 오류';
+        }
+
+        return { valid: false, hasDefaultKey: false };
+    }
+}
+
+// 설정 상태 업데이트
+function updateSettingsStatus(data) {
+    const statusEl = elements.settingsStatus;
+    if (!statusEl) return;
+
+    const iconEl = statusEl.querySelector('.status-icon');
+    const msgEl = statusEl.querySelector('.status-message');
+
+    if (data.valid) {
+        statusEl.className = 'settings-status success';
+        iconEl.textContent = '●';
+        msgEl.textContent = data.hasUserKey ? '사용자 API 키 활성' : '기본 API 키 사용 중';
+    } else if (data.hasDefaultKey) {
+        statusEl.className = 'settings-status success';
+        iconEl.textContent = '●';
+        msgEl.textContent = '기본 API 키 사용 중';
+    } else {
+        statusEl.className = 'settings-status warning';
+        iconEl.textContent = '●';
+        msgEl.textContent = 'API 키를 입력해주세요';
+    }
 }
 
 // 현재 날짜 설정
 function setCurrentDate() {
     const now = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    elements.currentDate.textContent = now.toLocaleDateString('ko-KR', options);
+    if (elements.currentDate) {
+        elements.currentDate.textContent = now.toLocaleDateString('ko-KR', options);
+    }
 }
 
 // 마지막 업데이트 시간 설정
 function setLastUpdate() {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-    elements.lastUpdate.textContent = timeStr;
+    if (elements.lastUpdate) {
+        elements.lastUpdate.textContent = timeStr;
+    }
 }
 
 // 뉴스 로드
 async function loadNews() {
+    if (state.isLoading) return;
+
+    state.isLoading = true;
     showLoading(true);
 
-    // 실제 API 호출 대신 샘플 데이터 사용 (시뮬레이션)
-    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+        const params = new URLSearchParams({
+            category: state.currentCategory,
+            language: state.language,
+            page_size: '12'
+        });
 
-    state.newsData = sampleNewsData;
-    state.filteredData = [...state.newsData];
+        if (state.searchQuery) {
+            params.set('q', state.searchQuery);
+        }
 
-    setLastUpdate();
-    renderHeadline();
-    renderNewsGrid();
-    showLoading(false);
+        if (state.userApiKey) {
+            params.set('api_key', state.userApiKey);
+        }
+
+        const response = await fetch(`${API_BASE_URL}/api/news?${params}`);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || '뉴스를 불러오는데 실패했습니다.');
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.data.length > 0) {
+            state.newsData = data.data.map(article => ({
+                ...article,
+                category: CATEGORY_NAMES[article.category] || article.category,
+                categoryCode: article.category,
+                time: formatTime(article.publishedAt)
+            }));
+            state.filteredData = [...state.newsData];
+
+            setLastUpdate();
+            renderHeadline();
+            renderNewsGrid();
+        } else {
+            showError('검색 결과가 없습니다.', '다른 키워드나 카테고리를 시도해보세요.');
+        }
+    } catch (error) {
+        console.error('뉴스 로드 실패:', error);
+        showError('뉴스를 불러올 수 없습니다.', error.message);
+    } finally {
+        state.isLoading = false;
+        showLoading(false);
+    }
+}
+
+// 시간 포맷
+function formatTime(isoString) {
+    if (!isoString) return '';
+
+    const date = new Date(isoString);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000 / 60); // 분 단위
+
+    if (diff < 60) {
+        return `${diff}분 전`;
+    } else if (diff < 1440) {
+        return `${Math.floor(diff / 60)}시간 전`;
+    } else {
+        return `${Math.floor(diff / 1440)}일 전`;
+    }
+}
+
+// 에러 표시
+function showError(title, message) {
+    elements.newsGrid.innerHTML = `
+        <div class="error-message" style="grid-column: 1 / -1;">
+            <h3>${title}</h3>
+            <p>${message}</p>
+            <button onclick="window.location.reload()">새로고침</button>
+        </div>
+    `;
+
+    elements.headlineCard.innerHTML = `
+        <div class="headline-content">
+            <span class="headline-category">알림</span>
+            <h3 class="headline-title">${title}</h3>
+            <p class="headline-summary">${message}</p>
+        </div>
+    `;
 }
 
 // 로딩 표시
 function showLoading(show) {
-    elements.loadingIndicator.classList.toggle('show', show);
-    elements.newsGrid.style.display = show ? 'none' : 'grid';
+    if (elements.loadingIndicator) {
+        elements.loadingIndicator.classList.toggle('show', show);
+    }
+    if (elements.newsGrid) {
+        elements.newsGrid.style.display = show ? 'none' : 'grid';
+    }
 }
 
 // 헤드라인 렌더링
@@ -180,11 +269,15 @@ function renderHeadline() {
     const headline = state.filteredData[0];
     if (!headline) return;
 
+    const imageHtml = headline.image ?
+        `<img src="${headline.image}" alt="" class="headline-image" onerror="this.style.display='none'" style="width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:16px;">` : '';
+
     elements.headlineCard.innerHTML = `
         <div class="headline-content">
+            ${imageHtml}
             <span class="headline-category">${headline.category}</span>
             <h3 class="headline-title">${headline.title}</h3>
-            <p class="headline-summary">${headline.summary}</p>
+            <p class="headline-summary">${headline.summary || ''}</p>
             <div class="headline-meta">
                 <span class="headline-source">${headline.source}</span>
                 <span class="headline-time">${headline.time}</span>
@@ -197,24 +290,39 @@ function renderHeadline() {
 
 // 뉴스 그리드 렌더링
 function renderNewsGrid() {
-    const newsToRender = state.filteredData.slice(1); // 첫 번째는 헤드라인으로 사용
+    const newsToRender = state.filteredData.slice(1);
 
-    elements.newsGrid.innerHTML = newsToRender.map(news => `
-        <article class="news-card" data-id="${news.id}">
-            <div class="news-card-header">
-                <span class="news-category">${news.category}</span>
-                <span class="news-time">${news.time}</span>
+    if (newsToRender.length === 0) {
+        elements.newsGrid.innerHTML = `
+            <div class="error-message" style="grid-column: 1 / -1;">
+                <p>표시할 뉴스가 없습니다.</p>
             </div>
-            <h3 class="news-title">${news.title}</h3>
-            <p class="news-summary">${news.summary}</p>
-            <div class="news-footer">
-                <span class="news-source">${news.source}</span>
-                <div class="news-keywords">
-                    ${news.keywords.slice(0, 2).map(k => `<span class="keyword-tag">${k}</span>`).join('')}
+        `;
+        return;
+    }
+
+    elements.newsGrid.innerHTML = newsToRender.map(news => {
+        const imageHtml = news.image ?
+            `<img src="${news.image}" alt="" class="news-image" onerror="this.style.display='none'">` : '';
+
+        return `
+            <article class="news-card" data-id="${news.id}">
+                ${imageHtml}
+                <div class="news-card-header">
+                    <span class="news-category">${news.category}</span>
+                    <span class="news-time">${news.time}</span>
                 </div>
-            </div>
-        </article>
-    `).join('');
+                <h3 class="news-title">${news.title}</h3>
+                <p class="news-summary">${news.summary || ''}</p>
+                <div class="news-footer">
+                    <span class="news-source">${news.source}</span>
+                    <div class="news-keywords">
+                        ${(news.keywords || []).slice(0, 2).map(k => `<span class="keyword-tag">${k}</span>`).join('')}
+                    </div>
+                </div>
+            </article>
+        `;
+    }).join('');
 
     // 카드 클릭 이벤트
     document.querySelectorAll('.news-card').forEach(card => {
@@ -226,58 +334,212 @@ function renderNewsGrid() {
     });
 }
 
+// 현재 모달에 표시된 뉴스
+let currentModalNews = null;
+
 // 모달 열기
 function openModal(news) {
+    currentModalNews = news;
+
     document.getElementById('modalCategory').textContent = news.category;
     document.getElementById('modalTitle').textContent = news.title;
     document.getElementById('modalSource').textContent = news.source;
     document.getElementById('modalTime').textContent = news.time;
-    document.getElementById('modalSummary').textContent = news.summary;
-    document.getElementById('modalLink').href = news.url;
+    document.getElementById('modalSummary').textContent = news.summary || '요약 정보가 없습니다.';
+    document.getElementById('modalLink').href = news.url || '#';
 
     document.getElementById('modalKeywords').innerHTML =
-        news.keywords.map(k => `<span class="keyword-tag">${k}</span>`).join('');
+        (news.keywords || []).map(k => `<span class="keyword-tag">${k}</span>`).join('');
+
+    // AI 분석 결과 초기화
+    resetAiAnalysis();
 
     elements.modalOverlay.classList.add('show');
     document.body.style.overflow = 'hidden';
+}
+
+// AI 분석 결과 초기화
+function resetAiAnalysis() {
+    const aiResult = document.getElementById('aiResult');
+    const aiLoading = document.getElementById('aiLoading');
+    const aiContent = document.getElementById('aiContent');
+    const aiAnalyzeBtn = document.getElementById('aiAnalyzeBtn');
+
+    if (aiResult) aiResult.style.display = 'none';
+    if (aiLoading) aiLoading.style.display = 'flex';
+    if (aiContent) aiContent.style.display = 'none';
+    if (aiAnalyzeBtn) {
+        aiAnalyzeBtn.disabled = false;
+        aiAnalyzeBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+            AI 분석 (한국어 요약 + 감성분석)
+        `;
+    }
+}
+
+// AI 분석 실행
+async function runAiAnalysis() {
+    if (!currentModalNews) return;
+
+    const aiResult = document.getElementById('aiResult');
+    const aiLoading = document.getElementById('aiLoading');
+    const aiContent = document.getElementById('aiContent');
+    const aiAnalyzeBtn = document.getElementById('aiAnalyzeBtn');
+
+    // UI 상태 변경
+    aiResult.style.display = 'block';
+    aiLoading.style.display = 'flex';
+    aiContent.style.display = 'none';
+    aiAnalyzeBtn.disabled = true;
+    aiAnalyzeBtn.innerHTML = `
+        <div class="spinner" style="width:18px;height:18px;border-width:2px;"></div>
+        분석 중...
+    `;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/analyze`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: currentModalNews.title || '',
+                content: currentModalNews.content || currentModalNews.summary || '',
+                openai_key: state.userOpenAIKey || ''
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'AI 분석 실패');
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+            // 결과 표시
+            displayAiResult(data);
+        } else {
+            throw new Error(data.message || 'AI 분석 실패');
+        }
+    } catch (error) {
+        console.error('AI 분석 오류:', error);
+        aiLoading.innerHTML = `
+            <span style="color: #ef4444;">분석 실패: ${error.message}</span>
+            <button onclick="runAiAnalysis()" style="margin-top:8px;padding:8px 16px;background:#2563eb;color:white;border:none;border-radius:8px;cursor:pointer;">
+                다시 시도
+            </button>
+        `;
+    }
+}
+
+// AI 분석 결과 표시
+function displayAiResult(data) {
+    const aiLoading = document.getElementById('aiLoading');
+    const aiContent = document.getElementById('aiContent');
+    const aiAnalyzeBtn = document.getElementById('aiAnalyzeBtn');
+
+    // 로딩 숨기고 결과 표시
+    aiLoading.style.display = 'none';
+    aiContent.style.display = 'block';
+
+    // 한국어 요약
+    document.getElementById('aiSummary').textContent = data.summary_ko || '요약 정보가 없습니다.';
+
+    // 감성 분석 바
+    const positiveBar = document.getElementById('positiveBar');
+    const negativeBar = document.getElementById('negativeBar');
+    const positiveValue = document.getElementById('positiveValue');
+    const negativeValue = document.getElementById('negativeValue');
+
+    positiveBar.style.width = `${data.positive}%`;
+    negativeBar.style.width = `${data.negative}%`;
+    positiveValue.textContent = `${data.positive}%`;
+    negativeValue.textContent = `${data.negative}%`;
+
+    // 감성 결과 배지
+    const sentimentResult = document.getElementById('sentimentResult');
+    let badgeClass = 'neutral';
+    if (data.sentiment === '긍정적') badgeClass = 'positive';
+    else if (data.sentiment === '부정적') badgeClass = 'negative';
+
+    sentimentResult.innerHTML = `<span class="sentiment-badge ${badgeClass}">${data.sentiment}</span>`;
+
+    // 버튼 업데이트
+    aiAnalyzeBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        분석 완료
+    `;
 }
 
 // 모달 닫기
 function closeModal() {
     elements.modalOverlay.classList.remove('show');
     document.body.style.overflow = '';
+    currentModalNews = null;
+}
+
+// 설정 모달 열기
+function openSettings() {
+    checkApiStatus();
+    elements.settingsOverlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+// 설정 모달 닫기
+function closeSettings() {
+    elements.settingsOverlay.classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// 설정 저장
+async function saveSettingsHandler() {
+    const apiKey = elements.userApiKey.value.trim();
+    const language = elements.newsLanguage.value;
+
+    // 저장
+    if (apiKey) {
+        localStorage.setItem('newsApiKey', apiKey);
+        state.userApiKey = apiKey;
+    } else {
+        localStorage.removeItem('newsApiKey');
+        state.userApiKey = '';
+    }
+
+    localStorage.setItem('newsLanguage', language);
+    state.language = language;
+
+    // 상태 확인 및 새로고침
+    await checkApiStatus();
+    closeSettings();
+    await loadNews();
+}
+
+// API 키 초기화
+function clearApiKeyHandler() {
+    elements.userApiKey.value = '';
+    localStorage.removeItem('newsApiKey');
+    state.userApiKey = '';
+    checkApiStatus();
 }
 
 // 카테고리 필터
-function filterByCategory(category) {
+async function filterByCategory(category) {
     state.currentCategory = category;
-
-    if (category === 'all') {
-        state.filteredData = [...state.newsData];
-    } else {
-        state.filteredData = state.newsData.filter(n => n.categoryCode === category);
-    }
-
-    applySearchFilter();
-    renderHeadline();
-    renderNewsGrid();
-}
-
-// 검색 필터
-function applySearchFilter() {
-    if (!state.searchQuery) return;
-
-    state.filteredData = state.filteredData.filter(news =>
-        news.title.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
-        news.summary.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
-        news.keywords.some(k => k.toLowerCase().includes(state.searchQuery.toLowerCase()))
-    );
+    state.searchQuery = '';
+    elements.searchInput.value = '';
+    await loadNews();
 }
 
 // 검색 처리
-function handleSearch(query) {
+async function handleSearch(query) {
     state.searchQuery = query;
-    filterByCategory(state.currentCategory);
+    await loadNews();
 }
 
 // 뷰 변경
@@ -294,33 +556,80 @@ function toggleSidebar() {
 // 이벤트 바인딩
 function bindEvents() {
     // 사이드바 토글
-    elements.mobileMenuBtn.onclick = toggleSidebar;
-    elements.sidebarToggle.onclick = toggleSidebar;
+    if (elements.mobileMenuBtn) {
+        elements.mobileMenuBtn.onclick = toggleSidebar;
+    }
+    if (elements.sidebarToggle) {
+        elements.sidebarToggle.onclick = toggleSidebar;
+    }
 
-    // 모달 닫기
-    elements.modalClose.onclick = closeModal;
-    elements.modalOverlay.onclick = (e) => {
-        if (e.target === elements.modalOverlay) closeModal();
-    };
+    // 뉴스 모달 닫기
+    if (elements.modalClose) {
+        elements.modalClose.onclick = closeModal;
+    }
+    if (elements.modalOverlay) {
+        elements.modalOverlay.onclick = (e) => {
+            if (e.target === elements.modalOverlay) closeModal();
+        };
+    }
+
+    // 설정 모달
+    if (elements.settingsBtn) {
+        elements.settingsBtn.onclick = openSettings;
+    }
+    if (elements.settingsClose) {
+        elements.settingsClose.onclick = closeSettings;
+    }
+    if (elements.settingsOverlay) {
+        elements.settingsOverlay.onclick = (e) => {
+            if (e.target === elements.settingsOverlay) closeSettings();
+        };
+    }
+    if (elements.saveSettings) {
+        elements.saveSettings.onclick = saveSettingsHandler;
+    }
+    if (elements.clearApiKey) {
+        elements.clearApiKey.onclick = clearApiKeyHandler;
+    }
+    if (elements.toggleKeyVisibility) {
+        elements.toggleKeyVisibility.onclick = () => {
+            const input = elements.userApiKey;
+            input.type = input.type === 'password' ? 'text' : 'password';
+        };
+    }
 
     // ESC 키로 모달 닫기
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Escape') {
+            closeModal();
+            closeSettings();
+        }
     });
 
     // 새로고침
-    elements.refreshBtn.onclick = () => {
-        loadNews();
-    };
+    if (elements.refreshBtn) {
+        elements.refreshBtn.onclick = () => loadNews();
+    }
 
     // 검색
     let searchTimeout;
-    elements.searchInput.oninput = (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            handleSearch(e.target.value);
-        }, 300);
-    };
+    if (elements.searchInput) {
+        elements.searchInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                clearTimeout(searchTimeout);
+                handleSearch(e.target.value);
+            }
+        };
+
+        elements.searchInput.oninput = (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (e.target.value.length >= 2 || e.target.value.length === 0) {
+                    handleSearch(e.target.value);
+                }
+            }, 500);
+        };
+    }
 
     // 뷰 변경
     elements.viewBtns.forEach(btn => {
@@ -336,19 +645,22 @@ function bindEvents() {
         link.onclick = (e) => {
             e.preventDefault();
 
-            // 활성 상태 변경
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             link.parentElement.classList.add('active');
 
-            // 카테고리 필터 적용
             filterByCategory(link.dataset.category);
 
-            // 모바일에서 사이드바 닫기
             if (window.innerWidth <= 768) {
                 toggleSidebar();
             }
         };
     });
+
+    // AI 분석 버튼
+    const aiAnalyzeBtn = document.getElementById('aiAnalyzeBtn');
+    if (aiAnalyzeBtn) {
+        aiAnalyzeBtn.onclick = runAiAnalysis;
+    }
 }
 
 // 앱 시작
