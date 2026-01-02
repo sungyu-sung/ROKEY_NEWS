@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROKEY NEWS - AI 뉴스 요약</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 사이드바 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">ROKEY<span>NEWS</span></h1>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="메뉴 닫기">
+                    <span></span>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item active">
+                        <a href="#" class="nav-link" data-category="all">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            전체 뉴스
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="tech">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                            기술/IT
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="economy">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                            경제
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="politics">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                                <line x1="6" y1="1" x2="6" y2="4"/>
+                                <line x1="10" y1="1" x2="10" y2="4"/>
+                                <line x1="14" y1="1" x2="14" y2="4"/>
+                            </svg>
+                            정치
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="world">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="2" y1="12" x2="22" y2="12"/>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            </svg>
+                            국제
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="sports">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 2a10 10 0 0 0-6.88 17.23"/>
+                                <path d="M12 2a10 10 0 0 1 6.88 17.23"/>
+                                <path d="M8.5 8.5l7 7"/>
+                                <path d="M15.5 8.5l-7 7"/>
+                            </svg>
+                            스포츠
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="update-info">
+                    <span class="update-label">마지막 업데이트</span>
+                    <span class="update-time" id="lastUpdate">--:--</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <!-- 헤더 -->
+            <header class="header">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="메뉴 열기">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="뉴스 검색...">
+                </div>
+
+                <div class="header-actions">
+                    <button class="refresh-btn" id="refreshBtn" title="새로고침">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6"/>
+                            <path d="M1 20v-6h6"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                    </button>
+                    <span class="current-date" id="currentDate"></span>
+                </div>
+            </header>
+
+            <!-- 뉴스 컨텐츠 영역 -->
+            <div class="content-wrapper">
+                <!-- 헤드라인 섹션 -->
+                <section class="headline-section">
+                    <h2 class="section-title">오늘의 헤드라인</h2>
+                    <div class="headline-card" id="headlineCard">
+                        <div class="headline-content">
+                            <span class="headline-category">로딩 중...</span>
+                            <h3 class="headline-title">뉴스를 불러오는 중입니다...</h3>
+                            <p class="headline-summary">잠시만 기다려주세요.</p>
+                            <div class="headline-meta">
+                                <span class="headline-source"></span>
+                                <span class="headline-time"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 뉴스 그리드 -->
+                <section class="news-section">
+                    <div class="section-header">
+                        <h2 class="section-title">최신 뉴스 요약</h2>
+                        <div class="view-options">
+                            <button class="view-btn active" data-view="grid" title="그리드 보기">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                </svg>
+                            </button>
+                            <button class="view-btn" data-view="list" title="리스트 보기">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <rect x="3" y="4" width="18" height="4"/>
+                                    <rect x="3" y="10" width="18" height="4"/>
+                                    <rect x="3" y="16" width="18" height="4"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="news-grid" id="newsGrid">
+                        <!-- 뉴스 카드들이 여기에 동적으로 추가됨 -->
+                    </div>
+
+                    <div class="loading-indicator" id="loadingIndicator">
+                        <div class="spinner"></div>
+                        <span>뉴스를 불러오는 중...</span>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- 뉴스 상세 모달 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="newsModal">
+            <button class="modal-close" id="modalClose" aria-label="닫기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <div class="modal-content">
+                <span class="modal-category" id="modalCategory"></span>
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <div class="modal-meta">
+                    <span class="modal-source" id="modalSource"></span>
+                    <span class="modal-time" id="modalTime"></span>
+                </div>
+                <div class="modal-summary" id="modalSummary"></div>
+                <div class="modal-keywords" id="modalKeywords"></div>
+                <a href="#" class="modal-link" id="modalLink" target="_blank" rel="noopener noreferrer">
+                    원문 보기
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
